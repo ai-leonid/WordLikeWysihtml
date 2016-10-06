@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>WYSIHTMLM MY</title>
+
+	<script src="bower_components/wysihtml/dist/minified/wysihtml.min.js"></script>
+	<script src="bower_components/wysihtml/dist/minified/wysihtml.all-commands.min.js"></script>
+	<script src="bower_components/wysihtml/dist/minified/wysihtml.table_editing.min.js"></script>
+	<script src="bower_components/wysihtml/dist/minified/wysihtml.toolbar.min.js"></script>
+
+	<script src="bower_components/wysihtml/parser_rules/advanced_and_extended.js"></script>
+
+  <link rel="stylesheet" href="a4-common-style.css" type="text/css">
+  <link rel="stylesheet" href="editor-style.css" type="text/css">
+
+</head>
+
+<body>
+
+<!-- toolbar with suitable buttons and dialogues -->
+<div id="toolbar" class="toolbar" style="display: none;">
+  <div class="block">
+    <a data-wysihtml-command="bold" title="CTRL+B">bold</a>
+    <a data-wysihtml-command="italic" title="CTRL+I">italic</a>
+    <a data-wysihtml-command="underline" title="CTRL+U">underline</a>
+  </div>
+  <div class="block">
+    <a data-wysihtml-command="createLink">link</a>
+    <a data-wysihtml-command="removeLink"><s>link</s></a>
+    <a data-wysihtml-command="insertImage">image</a>
+    <a data-wysihtml-command="formatBlock" data-wysihtml-command-value="h1">h1</a>
+    <a data-wysihtml-command="formatBlock" data-wysihtml-command-value="h2">h2</a>
+    <a data-wysihtml-command="formatBlock" data-wysihtml-command-value="h3">h3</a>
+    <a data-wysihtml-command="formatBlock" data-wysihtml-command-value="p">p</a>
+    <a data-wysihtml-command="formatBlock" data-wysihtml-command-value="pre">pre</a>
+    <a data-wysihtml-command="formatBlock" data-wysihtml-command-blank-value="true">plaintext</a>
+    <a data-wysihtml-command="insertBlockQuote">blockquote</a>
+    <a data-wysihtml-command="formatCode" data-wysihtml-command-value="language-html">Code</a>
+  </div>
+  
+  <div class="block">
+    <a data-wysihtml-command="fontSizeStyle">Size</a>
+    <div data-wysihtml-dialog="fontSizeStyle" style="display: none;">
+      Size:
+      <input type="text" data-wysihtml-dialog-field="size" style="width: 60px;" value="" />
+      <a data-wysihtml-dialog-action="save">OK</a>&nbsp;<a data-wysihtml-dialog-action="cancel">Cancel</a>
+    </div>
+  </div>
+  
+  <div class="block">
+    <a data-wysihtml-command="insertUnorderedList">&bull; List</a>
+    <a data-wysihtml-command="insertOrderedList">1. List</a>
+  </div>
+  <div class="block">
+    <a data-wysihtml-command="outdentList">&lt;-</a>
+    <a data-wysihtml-command="indentList">-&gt;</a>
+  </div>
+
+  <div class="block">
+    <a data-wysihtml-command="alignLeftStyle">alignLeft</a>
+    <a data-wysihtml-command="alignRightStyle">alignRight</a>
+    <a data-wysihtml-command="alignCenterStyle">alignCenter</a>
+  </div>
+
+  <div class="block">
+    <a data-wysihtml-command="foreColorStyle">Color</a>
+    <div data-wysihtml-dialog="foreColorStyle" style="display: none;">
+      Color:
+      <input type="text" data-wysihtml-dialog-field="color" value="rgba(0,0,0,1)" />
+      <a data-wysihtml-dialog-action="save">OK</a>&nbsp;<a data-wysihtml-dialog-action="cancel">Cancel</a>
+    </div>
+  </div>
+  
+  <div class="block">
+    <a data-wysihtml-command="bgColorStyle">BG Color</a>
+    <div data-wysihtml-dialog="bgColorStyle" style="display: none;">
+      Color:
+      <input type="text" data-wysihtml-dialog-field="color" value="rgba(0,0,0,1)" />
+      <a data-wysihtml-dialog-action="save">OK</a>&nbsp;<a data-wysihtml-dialog-action="cancel">Cancel</a>
+    </div>
+  </div>
+  
+  <div class="block">
+    <a data-wysihtml-command="undo">undo</a>
+    <a data-wysihtml-command="redo">redo</a>
+  </div>
+
+  <div class="block">
+    <a data-wysihtml-action="change_view">HTML</a>
+  </div>
+
+  <div class="block" data-wysihtml-hiddentools="table" style="display: none;">
+    <a data-wysihtml-command="mergeTableCells">Merge</a>
+    <a data-wysihtml-command="addTableCells" data-wysihtml-command-value="above">row-before</a>
+    <a data-wysihtml-command="addTableCells" data-wysihtml-command-value="below">row-after</a>
+    <a data-wysihtml-command="addTableCells" data-wysihtml-command-value="before">col-before</a>
+    <a data-wysihtml-command="addTableCells" data-wysihtml-command-value="after">col-after</a>
+  
+    <a data-wysihtml-command="deleteTableCells" data-wysihtml-command-value="row">delete row</a>
+    <a data-wysihtml-command="deleteTableCells" data-wysihtml-command-value="column">delete col</a>
+  
+  </div>
+
+
+  <div data-wysihtml-dialog="createLink" style="display: none;">
+    <label>
+      Link:
+      <input data-wysihtml-dialog-field="href" value="http://">
+    </label>
+    <a data-wysihtml-dialog-action="save">OK</a>&nbsp;<a data-wysihtml-dialog-action="cancel">Cancel</a>
+  </div>
+  <div data-wysihtml-dialog="insertImage" style="display: none;">
+    <label>
+      Image:
+      <input data-wysihtml-dialog-field="src" value="http://">
+    </label>
+    <label>
+      Align:
+      <select data-wysihtml-dialog-field="className">
+        <option value="">default</option>
+        <option value="wysiwyg-float-left">left</option>
+        <option value="wysiwyg-float-right">right</option>
+      </select>
+    </label>
+    <a data-wysihtml-dialog-action="save">OK</a>&nbsp;<a data-wysihtml-dialog-action="cancel">Cancel</a>
+  </div>
+  <div onclick="getContent()"><a href="#">Получить содержимое</a></div>
+  <div onclick="makeOdt()"><a href="#">Создать ODT</a></div>
+  <div onclick="makeDocx()"><a href="#">Создать DOCX</a></div>
+  <div onclick="makePdf()"><a href="#">Создать PDF</a></div>
+</div>
+
+<!-- element to edit -->
+<hr class="page_breaker" style="margin-top:297mm;" />
+
+<div id = "page" class="page">
+  <div id="editor" class="subpage"></div>
+</div>
+
+<script>
+    
+  //создание кроссбраузерного объявления XMLHttpRequest включая IE7,8,9
+  function createXmlHttpRequest(){
+    var xmlhttp;
+    //перебираем возможные внутренние реализации на Activex для IE
+    try {
+      xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+    } 
+    catch (e) {
+      try {
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+      } 
+      catch (e) {
+        xmlhttp = false;
+      }
+    }
+    //если вышеописанными способами XMLHttpRequest не объявляется проверяем на поддержку обычного XMLHttpRequest
+    if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
+      //создаём XMLHttpRequest и проверяем, поддерживает ли он событие onload. 
+      //Если нет, то это IE8,9 использующий XDomainRequest
+      xmlhttp = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
+    }
+    //если XMLHttpRequest не удалось создать - возвращаем ошибку 
+    else throw new Error('XMLHttpRequest not supported');
+    //возвращаем созданный  XMLHttpRequest
+    return xmlhttp;
+  }
+
+  /**$
+  * Универсальная функция - обёртка для отправки XMLHttpRequest
+  * может отправлять как синхронные запросы (просто по URL на выходе объект XMLHttpRequest со всеми данными)
+  * так и асинхронные для которых обязательно нужно указать  url, method,  async=true, ok_func-колбек в случае успеха (можно 
+  * тоже не передавать тогда функция просто покажет в консоли код ответа сервера)
+  * остальные параметры если нет необходимости можно не передавать.
+  * На вход функциий ok_func и error_func при вызове внутри передаётся объект XMLHttpRequest ответа
+  * поэтому внутри колбэков можно его использовать определив входной параметр 
+  * @url - адрес для отправки запроса 
+  * @method - метод запроса, по умолчанию GET
+  * @async - тип запроса синхронный или асинхронный, по умолчанию false
+  * @ok_func - функция которая выполнится при успехе (HTTP статусы 200-2xx и 300-3xx), по умолчанию null
+  * @error_func - функция которая выполнится при ошибке (HTTP статусы 400+), по умолчанию null
+  * @send_data - данные для отправки на сервер, по умолчанию null
+  * @request_headers - отправляемые заголовки, по умолчанию null. !!! TODO доделать
+  */
+  function openXmlHttpRequest (url, method="GET", async=false, ok_func=null, error_func=null, send_data=null, request_headers=null) {
+     //создаём кроссбраузерный объект XMLHttpRequest c учётом пользователей IE
+    let XHR = createXmlHttpRequest();
+    let xhr = new XHR();
+
+    //проверяем тип запроса асинхронный или синхронный
+    if (async) {
+      //открываем асинхронное соединение
+      xhr.open(method, url, true);
+      //в зависимости от таймера прекращаем асинхронный запрос если время истекло 
+      xhr.timeout = 10000; // 10 секунд (в миллисекундах)
+      xhr.ontimeout = function() {
+        alert( 'Извините, запрос превысил максимальное время. Сервер не отвечает!' );
+      }
+      //при успешном соединении с сервером обрабатываем ответ
+      xhr.onload = function () {
+        //сохраняем ответ в переменную 
+        let req = this;
+        //  readyState - состояние выполнения скрипта: 0 - Unitialized, 1 - Loading, 2 - Loaded, 3 - Interactive, 4 - Complete
+        //status - HTTP код ответа сервера от 200 до 399 - успех
+        if (this.readyState == 4 && this.status >= 200 && this.status < 400) {  
+          //проверяем тип колбека и если он не функция переназначаем его своей
+          if (typeof (ok_func) != "function") ok_func = function(){console.log("Succes: "+ req.status+" "+ req.statusText)};
+          ok_func(req);
+        }
+        //в случае неудачи вызываем колбэк функцию ошибки если есть или отвечаем по умолчанию
+        else {
+          if (typeof (error_func) != "function") error_func = function(){console.log("Error: "+req.status+" "+ req.statusText)};
+          error_func(req);
+        }
+      };
+      //если соединение с сервером не удалось - например проблемы с сетью
+      xhr.onerror = function () {
+        //на всякий случай также сохраняем ответ сервера (хотя его не должно быть)
+        let req = this;
+        //также вызываем колбэк функцию ошибки 
+        if (typeof (error_func) != "function") error_func = function(){alert("XMLHttpRequest connection network error!")};
+        error_func(req);
+        console.log(this.status+" "+ this.statusText);
+      };
+      //указываем хедер с кодировкой
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded;charset=UTF-8");
+      //передаём данные если есть 
+      xhr.send(send_data);
+    }
+
+    //если запрос синхронный
+    else {
+      //соединяемся
+      xhr.open(method, url, false);
+      //указываем хедер с кодировкой
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded;charset=UTF-8");
+      //передаём данные если есть 
+      xhr.send(send_data);
+      //возвращаем объект XMLHttpRequest как результат работы функции
+      return xhr;
+    }
+  }
+
+
+
+  //$ Функции написаны немного неправильно, нужно их переделать под формат Polymer,
+  // по-другому объявить глобальные переменные и другие мелочи
+  window.onload=function(){
+    
+    // window.doc_guid = '123456123456123456123455';
+    window.doc_guid = gen_guid();
+    window.serv_addr = 'http://u-test-02.tzkmp/';
+  }
+
+  /**$
+  * Функция для генерации уникального идентификатора из 24 символов hex
+  */
+  function gen_guid(){
+    var d = new Date().getTime();
+    var uuid = 'xyxxxxxxxxxxxxxxyxxxxx4x'.replace(/[xy]/g, function(c) {
+      var r = (d + Math.random()*16)%16 | 0;
+      d = Math.floor(d/16);
+      return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+  };
+
+    /**$
+    * Функция для сохранения документа на сервер, оборачиваем содержимое в теги <html><head>
+    * и добавляем стили для форматирования документа в теги <style> 
+    */
+  function saveDoc (content, extension){
+    //собираем ссылку для будущего документа из адреса сервера (глобальная переменная) и идентефикатора документа
+    let doc_ref = window.serv_addr+window.doc_guid;
+    //добавляем текстовое содержимое редактора и загружаем использованный стиль СИНХРОННО
+    var contenthtml = "<html><head><meta charset='UTF-8'><style>" + 
+    (openXmlHttpRequest('a4-common-style.css')).responseText + 
+    "</style></head><body>" + content + "</body></html>"; 
+    console.log(contenthtml);
+    //отправляем данные для обработки методом POST и указываем успешную колбэк-функцию
+    openXmlHttpRequest(doc_ref, 'POST', true, successCallback, null, "text="+contenthtml); 
+
+    function successCallback () {
+     //ставим таймер в 1 секунду чтобы сервер успевал обрабатывать запросы
+     //потом вызываем функцию получения документа по расширению на сервере 
+      setTimeout(getDoc (), 1000);
+    };
+
+    /**$
+    * Функция для для генерации документа нужного формата на сервере. 
+    * Серверу нужно отправить расширение по которому он будет генерировать документ
+    */
+    function getDoc () {
+      //отправляем запрос для генерации по расширению
+      openXmlHttpRequest(doc_ref+"/"+extension, 'GET' , true, 
+        //в успешный колбэк вставляем входным параметром массив ответа сервера на XMLHttpRequest
+        //по умолчанию определённый в openXmlHttpRequest
+        function (answer) { 
+          //если статус 200, документ готов 
+          //загружаем документ с сервера, (немного костыльно)
+          if (answer.status=='200') window.location.href = doc_ref+'/'+extension;
+          //если не готов рекурсивно вызываем функцию по таймеру каждые 1,5 сек., в течении 7,5 сек.
+          else {
+            // начать повторы с интервалом 1,5 сек
+            var timerId = setInterval(getDoc(), 1500);
+            // через 7,5 сек остановить повторы
+            setTimeout(clearInterval(timerId), 7500); 
+          }
+        }
+      ); 
+    };
+  }
+
+  function makeOdt() {
+    saveDoc (getContent(), 'odt');
+  }      
+
+  function makeDocx() {
+    saveDoc (getContent(), 'docx');
+  }
+
+  function makePdf() {
+    saveDoc (getContent(), 'pdf');
+  }
+
+ //опции для создания wysihtml редактора https://github.com/Voog/wysihtml/wiki/Configuration 
+ var options = {
+      toolbar: 'toolbar',
+      parserRules:  wysihtmlParserRules,
+      useLineBreaks: false,
+      cleanUp: true
+  }
+  //создаём редактор
+  var editor = new wysihtml.Editor('editor', options);
+  var editor_container = document.getElementById('editor');
+  var page_container = document.getElementById('page');
+  //при любом взаимодействии с пользователем вызываем функцию onChange
+  editor.on("interaction", onChange);
+  
+  /**$ 
+  * функция получения содержимого редактора стандартная .getValue
+  */
+  function getContent () {
+    let editor_conent = editor.getValue(true)
+    console.log(editor_conent);
+    return editor_conent;
+  }
+
+  /**$ 
+  * функция вызываемая при взаимодействии пользователя с редактором
+  */
+  function onChange() { 
+    //получаем от page_container свойство height в пикселях
+    let size_px = getStyle(page_container, 'height');
+    //переводим пиксели в браузерные миллиметры с помощью slice
+    //обрезаем у значения высоты надпись 'px'
+    let size_mm = pixelsToSize((size_px.slice(0, -2)), "mm", true);
+    //ищем на странице все линии - разделители страниц
+    let allPageBreakers = document.getElementsByClassName('page_breaker');
+    //получаем значение отступа margin у последнего (можно получить в мм т.к. стиль задан в самом теге hr)
+    let lastPageBreakerMarginMm = (allPageBreakers[allPageBreakers.length-1].style.marginTop).slice(0, -2);
+
+    //если размер страницы в mm больше margin-top разделителя 
+    if (size_mm>lastPageBreakerMarginMm) {
+      //высчитываем значение следующего margin-top для разделителя где 297 высота страницы A4 
+      //TODO: убрать значение 297 ввести переменной 
+      let nextPageBreaker =Number (lastPageBreakerMarginMm)+297;
+      
+      //создаём элемент hr c нужными параметрами
+      let add_hr=document.createElement('hr');
+      add_hr.style.marginTop=nextPageBreaker+'mm';
+      add_hr.className='page_breaker';
+      //вставляем элемент после последнего элемента hr на странице самописной функцией insertAfter
+      insertAfter(add_hr, allPageBreakers[allPageBreakers.length-1]);
+      //соответсвенно увеличиваем высоту страницы и редактируемой области
+      page_container.style.minHeight = nextPageBreaker+'mm';
+      editor_container.style.minHeight = nextPageBreaker+'mm';
+    }
+    //если размер страницы меньше последнего отсупа
+    else if (size_mm<lastPageBreakerMarginMm){
+      //TODO доделать уменьшение страницы
+    }
+  }
+
+  /**$ 
+  * функция insertAfter вставляет элемент после переданного
+  * @elem - элемент который надо вставить
+  * @refElem - элемент после которого вставить
+  */
+  function insertAfter(elem, refElem) {
+    return refElem.parentNode.insertBefore(elem, refElem.nextSibling);
+  }
+
+  /**$ 
+  * функция pixelsToSize переводит пиксели в БРАУЗЕРНЫЕ мм, см, дюймы
+  * @px - размер который надо перевести
+  * @size_type - тип "mm", "cm", "in"
+  * @rounded - округление выходного значения по Math.round, по умолчанию false
+  */
+  function pixelsToSize(px, size_type, rounded=false) {
+    //создаём скрытый эталонный div размером 1in и получаем его значение высоты
+    let temp_div=document.createElement('div');
+    temp_div.id='pixels2size';
+    temp_div.style.width='1in';
+    temp_div.style.height='1in';
+    temp_div.style.display='hidden';
+    document.body.appendChild(temp_div);
+    //получаем высоту в pixels и обрезаем-slice надпись in 
+    let pixels = (getStyle(document.getElementById('pixels2size'), 'height')).slice(0, -2);
+    //удаляем эталонный div
+    temp_div.parentNode.removeChild(document.getElementById('pixels2size'));
+
+    //чтобы вычислить наоборот из in в px надо inches * pixels;
+    //2.54 - размер дюйма в сантиметрах
+    let size;
+    //выбираем тип и производим соответсвующие вычисления
+    switch (size_type) {
+      case 'cm':
+        size = (px/pixels)*2.54;
+        break;
+      case 'mm':
+        size = (px/pixels)*25.4;
+        break;
+      case 'in':
+        size = px/pixels;
+        break;
+    }
+    //если надо округляем полученное значение размера
+    if (rounded) {
+      size = Math.round(size);
+    }
+    return size;
+  }
+
+  /**$ 
+  * функция getStyle получает свойство элемента которое нужно
+  * @el - элемент
+  * @styleProp - свойство которое надо получить
+  */
+  function getStyle(el, styleProp) {
+    //camelize - переводит название свойства в camel-нотацию
+    var camelize = function (str) {
+      return str.replace(/\-(\w)/g, function(str, letter){
+        return letter.toUpperCase();
+      });
+    };
+
+    //различными способами пытаемся получить свойство элемента кроссбраузерно
+    if (el.currentStyle) {
+      return el.currentStyle[camelize(styleProp)];
+    } 
+    else if (document.defaultView && document.defaultView.getComputedStyle) {
+      return document.defaultView.getComputedStyle(el,null).getPropertyValue(styleProp);
+    } 
+    else {
+      return el.style[camelize(styleProp)]; 
+    }
+  } 
+  
+</script>
+
+</body>
+</html>

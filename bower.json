@@ -1,0 +1,20 @@
+{
+  "name": "wordlikewysihtml",
+  "authors": [
+    "leonid_ilin <leonid_ilin8@mail.ru>"
+  ],
+  "description": "css style wysihtml like word and wrap for xmlhttprequest",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "wysihtml": "0.6"
+  }
+}
