@@ -181,9 +181,9 @@
   * @ok_func - функция которая выполнится при успехе (HTTP статусы 200-2xx и 300-3xx), по умолчанию null
   * @error_func - функция которая выполнится при ошибке (HTTP статусы 400+), по умолчанию null
   * @send_data - данные для отправки на сервер, по умолчанию null
-  * @request_headers - отправляемые заголовки, по умолчанию null. !!! TODO доделать
+  * @headers - отправляемые заголовки, по умолчанию null. !!! TODO доделать
   */
-  function openXmlHttpRequest (url, method="GET", async=false, ok_func=null, error_func=null, send_data=null, request_headers=null) {
+  function openXmlHttpRequest (url, method="GET", async=false, ok_func=null, error_func=null, send_data=null, headers=null) {
      //создаём кроссбраузерный объект XMLHttpRequest c учётом пользователей IE
     let XHR = createXmlHttpRequest();
     let xhr = new XHR();
@@ -228,7 +228,6 @@
       //передаём данные если есть 
       xhr.send(send_data);
     }
-
     //если запрос синхронный
     else {
       //соединяемся
@@ -242,13 +241,10 @@
     }
   }
 
-
-
   //$ Функции написаны немного неправильно, нужно их переделать под формат Polymer,
   // по-другому объявить глобальные переменные и другие мелочи
   window.onload=function(){
-    
-    // window.doc_guid = '123456123456123456123455';
+    //window.doc_guid = '123456123456123456123455';
     window.doc_guid = gen_guid();
     window.serv_addr = 'http://u-test-02.tzkmp/';
   }
