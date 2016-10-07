@@ -140,31 +140,38 @@
 
 <script>
     
-  //создание кроссбраузерного объявления XMLHttpRequest включая IE7,8,9
+  /**$
+  * Функция создаёт кроссбраузерный объект XMLHttpRequest включая IE6,7,8,9
+  */ 
   function createXmlHttpRequest(){
     var xmlhttp;
-    //перебираем возможные внутренние реализации на Activex для IE
+    //проверяем на поддержку обычного XMLHttpRequest, работает во всех браузерах кроме IE6 и более ранних версиях
     try {
-      xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-    } 
-    catch (e) {
-      try {
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-      } 
-      catch (e) {
-        xmlhttp = false;
-      }
-    }
-    //если вышеописанными способами XMLHttpRequest не объявляется проверяем на поддержку обычного XMLHttpRequest
-    if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
       //создаём XMLHttpRequest и проверяем, поддерживает ли он событие onload. 
       //Если нет, то это IE8,9 использующий XDomainRequest
       xmlhttp = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
     }
-    //если XMLHttpRequest не удалось создать - возвращаем ошибку 
-    else throw new Error('XMLHttpRequest not supported');
-    //возвращаем созданный  XMLHttpRequest
-    return xmlhttp;
+    catch (e) {
+      //событие происходит если используется IE6 или более раняя версия
+      var XmlHttpVersions = new Array("MSXML2.XMLHHTP.6.0",
+                                      "MSXML2.XMLHHTP.5.0",
+                                      "MSXML2.XMLHHTP.4.0",
+                                      "MSXML2.XMLHHTP.3.0",
+                                      "MSXML2.XMLHHTP",
+                                      "Microsoft.XMLHHTP");
+      //попоробовать все возможные версии (prog id) на Activex для IE, пока что то не подойдет
+      for (var i = 0; i < XmlHttpVersions.length && !xmlhttp; i++) {
+        try {
+          xmlhttp = new ActiveXObject(XmlHttpVersions[i]);
+        }
+        catch (e) { }
+      }
+    }
+
+    if (!xmlhttp) {
+      throw new Error('XMLHttpRequest not supported');
+    }
+    else return xmlhttp;
   }
 
   /**$
@@ -186,7 +193,7 @@
   function openXmlHttpRequest (url, method="GET", async=false, ok_func=null, error_func=null, send_data=null, headers=null) {
      //создаём кроссбраузерный объект XMLHttpRequest c учётом пользователей IE
     let XHR = createXmlHttpRequest();
-    let xhr = new XHR();
+    let xhr = new (createXmlHttpRequest())();
 
     //проверяем тип запроса асинхронный или синхронный
     if (async) {
@@ -295,7 +302,9 @@
         function (answer) { 
           //если статус 200, документ готов 
           //загружаем документ с сервера, (немного костыльно)
-          if (answer.status=='200') window.location.href = doc_ref+'/'+extension;
+          if (answer.status=='200') {
+            window.location.assign(doc_ref+'/'+extension);
+          }
           //если не готов рекурсивно вызываем функцию по таймеру каждые 1,5 сек., в течении 7,5 сек.
           else {
             // начать повторы с интервалом 1,5 сек
